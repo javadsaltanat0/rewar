@@ -51,18 +51,18 @@ class LanguageSelectionScreen extends StatefulWidget {
 
 class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   static const _glassSettings = OCLiquidGlassSettings(
-    blendPx: 5.0,
-    refractStrength: -0.2,
-    distortFalloffPx: 45.0,
+    blendPx: 4.0,
+    refractStrength: -0.20,
+    distortFalloffPx: 42.0,
     distortExponent: 4.0,
-    blurRadiusPx: 25.0,
+    blurRadiusPx: 10.0,
     specAngle: 4.0,
-    specStrength: 0.5,
-    specPower: 120.0,
-    specWidth: 10.0,
-    lightbandOffsetPx: 10.0,
-    lightbandWidthPx: 30.0,
-    lightbandStrength: 0.9,
+    specStrength: 0.4,
+    specPower: 90.0,
+    specWidth: 9.0,
+    lightbandOffsetPx: 8.0,
+    lightbandWidthPx: 24.0,
+    lightbandStrength: 0.45,
     lightbandColor: Colors.white,
   );
 
