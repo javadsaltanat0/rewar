@@ -1,0 +1,213 @@
+rules_version = '2';
+
+// Firestore Security Rules — Kurdistan Paradise Travel Guide (mobile app).
+//
+// Per SECURITY.md section 1: DENY BY DEFAULT. Nothing is readable or
+// writable unless a rule below explicitly allows it. Collections are added
+// here as the screen that uses them is built — not as end-of-project cleanup.
+//
+// Collections covered so far:
+//   password_reset_codes  — Verification Code screen (server-only)
+//   mail                  — Verification Code screen (server-only)
+//   featured              — Home screen carousel (public read)
+//   nature_spots          — Home screen count() (public read)
+//   favorites             — Home screen heart (owner-only)
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Admin status comes from a custom claim on the Auth token, never from a
+    // client-writable field (SECURITY.md section 3).
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    // -------------------------------------------------------------------
+    // users/{uid} — the signed-in user's own profile, created by the
+    // Register screen.
+    //
+    // The security question here is not "can they write?" but "WHICH fields
+    // can they write?". A user creating their own document must never be
+    // able to set `role: "admin"`, nor to claim `emailVerified: true` /
+    // `phoneVerified: true` — those mirror Firebase Auth, which is the real
+    // source of truth, and are written only by Cloud Functions (Admin SDK,
+    // which bypasses these rules).
+    //
+    // So both create and update are restricted to an explicit allow-list of
+    // fields. Anything outside it is rejected regardless of its value.
+    // -------------------------------------------------------------------
+    match /users/{userId} {
+      // Fields the client may ever set on itself.
+      function writableFields() {
+        return [
+          'name', 'email', 'phone', 'dateOfBirth', 'gender',
+          'profileImageUrl', 'preferredLanguage',
+          'termsAcceptedAt', 'termsVersion',
+          'createdAt', 'updatedAt', 'source'
+        ];
+      }
+
+      function onlyWritableFields() {
+        return request.resource.data.keys().hasOnly(writableFields());
+      }
+
+      function isOwner() {
+        return request.auth != null && request.auth.uid == userId;
+      }
+
+      function validShape() {
+        return request.resource.data.name is string
+          && request.resource.data.name.size() >= 2
+          && request.resource.data.name.size() <= 100
+          && request.resource.data.email is string
+          && request.resource.data.phone is string
+          && request.resource.data.dateOfBirth is timestamp
+          // Gender is optional, but if present must be one of three values.
+          && (!('gender' in request.resource.data.keys())
+              || request.resource.data.gender in ['male', 'female', 'other']);
+      }
+
+      allow get: if isOwner();
+      // No `list`: nobody may enumerate the user base.
+      allow create: if isOwner() && onlyWritableFields() && validShape();
+      // Updates may not change the document's owner-critical identity, and
+      // still may not introduce privileged fields.
+      allow update: if isOwner()
+        && onlyWritableFields()
+        && request.resource.data.email == resource.data.email;
+      // Account deletion goes through a Cloud Function so Auth, Storage and
+      // Firestore are cleaned up together (SECURITY.md 9).
+      allow delete: if false;
+    }
+
+    // -------------------------------------------------------------------
+    // legal_documents — versioned Terms of Service / Privacy Policy text.
+    //
+    // PUBLIC read, including unauthenticated: a user has to be able to read
+    // the Terms before they have an account, and consent is collected during
+    // registration. There is nothing sensitive here — it is the text every
+    // user is meant to see.
+    //
+    // Admin-only write via the custom claim (SECURITY.md 3), never from the
+    // mobile client. If the client could write this, it could rewrite the
+    // agreement it is about to accept.
+    // -------------------------------------------------------------------
+    match /legal_documents/{docId} {
+      allow get: if true;
+      // No `list`: documents are fetched by known id, not enumerated.
+      allow list: if false;
+      allow create, update, delete: if request.auth != null
+        && request.auth.token.admin == true;
+    }
+
+    // -------------------------------------------------------------------
+    // password_reset_codes — hashed one-time password-reset codes.
+    //
+    // NO client access whatsoever, in either direction. Only the Cloud
+    // Functions (Firebase Admin SDK) touch this collection, and the Admin
+    // SDK bypasses these rules entirely.
+    //
+    // Read access would leak the code hash + salt to anyone who could guess
+    // a document id, so this stays fully closed rather than "authenticated
+    // users only" — the client never has a legitimate reason to read it.
+    // -------------------------------------------------------------------
+    match /password_reset_codes/{docId} {
+      allow read, write: if false;
+    }
+
+    // -------------------------------------------------------------------
+    // mail — outbound email queue consumed by the "Trigger Email from
+    // Firestore" extension. Written only by Cloud Functions.
+    //
+    // Client write access here would let anyone send arbitrary email from
+    // the project's verified sender address.
+    // -------------------------------------------------------------------
+    match /mail/{docId} {
+      allow read, write: if false;
+    }
+
+    // -------------------------------------------------------------------
+    // featured — the home screen's carousel, curated in the admin panel.
+    //
+    // PUBLIC read, including unauthenticated: the home screen is fully
+    // browsable by a guest who has not signed in, so the carousel cannot
+    // require auth. `list` IS granted here (unlike legal_documents), because
+    // the screen queries the collection rather than fetching a known id.
+    //
+    // Admin-only write — this is catalog/marketing content, and a client
+    // that could write it could put anything on the app's front page.
+    // -------------------------------------------------------------------
+    match /featured/{itemId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------------------
+    // nature_spots — catalog data. Public read, admin-only write, per
+    // SECURITY.md section 1.
+    //
+    // The home screen only runs a count() aggregation against this today;
+    // the Explore Nature list screen (Phase 3) reads the documents
+    // themselves. `list` is required for count() to be permitted at all.
+    // -------------------------------------------------------------------
+    match /nature_spots/{spotId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------------------
+    // favorites — a user's saved places. Strictly owner-only in both
+    // directions (SECURITY.md section 1: "users can only read/write their
+    // own data").
+    //
+    // `list` is allowed only because the rule pins resource.data.userId to
+    // the caller: Firestore rejects any query that isn't provably limited to
+    // that user's own documents, so nobody can enumerate someone else's
+    // favourites.
+    //
+    // Document ids are `{uid}_{itemType}_{itemId}`, but the id is NOT what
+    // is trusted — the rules check the userId field, so a forged id gains
+    // nothing.
+    // -------------------------------------------------------------------
+    match /favorites/{favoriteId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function ownsIncoming() {
+        return isSignedIn()
+          && request.resource.data.userId == request.auth.uid;
+      }
+
+      function ownsExisting() {
+        return isSignedIn() && resource.data.userId == request.auth.uid;
+      }
+
+      function validShape() {
+        return request.resource.data.keys().hasOnly([
+            'userId', 'itemType', 'itemId',
+            'createdAt', 'updatedAt', 'source'
+          ])
+          && request.resource.data.itemType in
+              ['nature_spot', 'hotel', 'car', 'tour', 'flight']
+          && request.resource.data.itemId is string
+          && request.resource.data.itemId.size() > 0
+          && request.resource.data.itemId.size() <= 200;
+      }
+
+      allow get, list: if ownsExisting();
+      allow create: if ownsIncoming() && validShape();
+      // A favourite is added or removed, never edited in place — allowing
+      // update would only add a way to repoint a row at another user.
+      allow update: if false;
+      allow delete: if ownsExisting();
+    }
+
+    // -------------------------------------------------------------------
+    // Catch-all deny. Every future collection must add an explicit rule
+    // above this line; nothing is granted access by omission.
+    // -------------------------------------------------------------------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

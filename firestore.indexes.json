@@ -1,0 +1,14 @@
+{
+  "indexes": [
+    {
+      "//": "Home screen carousel: featured.where('active', ==, true).orderBy('order'). An equality filter combined with an orderBy on a different field needs a composite index; Firestore's single-field indexes are not enough.",
+      "collectionGroup": "featured",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "active", "order": "ASCENDING" },
+        { "fieldPath": "order", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

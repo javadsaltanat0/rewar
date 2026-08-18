@@ -1,0 +1,88 @@
+warning: in the working copy of '.claude/settings.local.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'DATA_MODEL.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'FIREBASE_SETUP.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'PROGRESS.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'ROADMAP.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SEED_DATA.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'firebase.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'firestore.indexes.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'firestore.rules', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'functions/index.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/l10n/app_localizations.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/main.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/models/legal_document.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/screens/home_screen.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/screens/language_selection_screen.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/screens/login_screen.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/screens/onboarding_screen.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/screens/register_screen.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/screens/terms_of_service_screen.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/screens/verification_code_screen.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/services/app_permissions.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/services/auth_service.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/services/firebase_bootstrap.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/services/legal_document_service.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/services/profile_setup_service.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/theme/app_colors.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/theme/theme_controller.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/widgets/glass_back_button.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/widgets/glass_panel.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/widgets/gradient_field.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/widgets/home_background.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/widgets/home_bottom_nav.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/widgets/page_background.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/widgets/primary_button.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/widgets/theme_mode_toggle.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'macos/Flutter/GeneratedPluginRegistrant.swift', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'pubspec.lock', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'test/widget_test.dart', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tool/seed_legal_documents.js', LF will be replaced by CRLF the next time Git touches it
+.claude/settings.local.json
+.gitignore
+DATA_MODEL.md
+FIREBASE_SETUP.md
+PROGRESS.md
+ROADMAP.md
+SECURITY.md
+SEED_DATA.md
+android/app/build.gradle.kts
+android/app/src/main/AndroidManifest.xml
+android/settings.gradle.kts
+firebase.json
+firestore.indexes.json
+firestore.rules
+functions/index.js
+ios/Runner/AppDelegate.swift
+ios/Runner/Info.plist
+lib/l10n/app_localizations.dart
+lib/main.dart
+lib/models/legal_document.dart
+lib/screens/home_screen.dart
+lib/screens/language_selection_screen.dart
+lib/screens/login_screen.dart
+lib/screens/onboarding_screen.dart
+lib/screens/register_screen.dart
+lib/screens/terms_of_service_screen.dart
+lib/screens/verification_code_screen.dart
+lib/services/app_permissions.dart
+lib/services/auth_service.dart
+lib/services/firebase_bootstrap.dart
+lib/services/legal_document_service.dart
+lib/services/profile_setup_service.dart
+lib/theme/app_colors.dart
+lib/theme/theme_controller.dart
+lib/widgets/glass_back_button.dart
+lib/widgets/glass_panel.dart
+lib/widgets/gradient_field.dart
+lib/widgets/home_background.dart
+lib/widgets/home_bottom_nav.dart
+lib/widgets/page_background.dart
+lib/widgets/primary_button.dart
+lib/widgets/theme_mode_toggle.dart
+macos/Flutter/GeneratedPluginRegistrant.swift
+pubspec.lock
+pubspec.yaml
+test/widget_test.dart
+tool/seed_legal_documents.js
+web/index.html
