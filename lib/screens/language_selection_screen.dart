@@ -53,10 +53,12 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   static const _glassSettings = OCLiquidGlassSettings(
     blendPx: 20.0,
     specAngle: 0.8,
-    refractStrength: -0.06,
-    distortFalloffPx: 35.0,
-    blurRadiusPx: 2.0,
-    specStrength: 4.0,
+    refractStrength: -0.20,
+    distortFalloffPx: 60.0,
+    distortExponent: 2.0,
+    blurRadiusPx: 0,
+    specStrength: 0,
+    lightbandStrength: 0,
     specWidth: 1.5,
     specPower: 4.0,
   );
@@ -291,6 +293,7 @@ class _LanguageButton extends StatelessWidget {
         ? AppColors.luminousMint
         : colorScheme.primary.withValues(alpha: 0.90);
     return OCLiquidGlass(
+      color: Colors.transparent,
       borderRadius: 20,
       shadow: BoxShadow(
         color: Colors.black.withValues(alpha: dark ? 0.28 : 0.10),
