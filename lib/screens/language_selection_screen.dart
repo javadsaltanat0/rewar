@@ -52,10 +52,10 @@ class LanguageSelectionScreen extends StatefulWidget {
 class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   static const _glassSettings = OCLiquidGlassSettings(
     blendPx: 4.0,
-    refractStrength: -0.20,
-    distortFalloffPx: 32.0,
+    refractStrength: -0.28,
+    distortFalloffPx: 38.0,
     distortExponent: 3.0,
-    blurRadiusPx: 4.0,
+    blurRadiusPx: 2.0,
     specAngle: 4.0,
     specStrength: 0.5,
     specPower: 120.0,
